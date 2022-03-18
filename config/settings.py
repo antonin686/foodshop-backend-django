@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-cktl=b+7@)k2rr#=_si_%=ecrjpo=abe!hue(ks^y89+*p%ti=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['foodshop-backend-django.herokuapp.com', 'localhost:3000']
+ALLOWED_HOSTS = ['foodshop-backend-django.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
