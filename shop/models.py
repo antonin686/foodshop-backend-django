@@ -1,3 +1,5 @@
+from email.policy import default
+from pyexpat import model
 from statistics import mode
 from django.db import models 
 from django.conf import settings
@@ -25,7 +27,22 @@ class Customer(models.Model):
     birth_date = models.DateField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.user.first_name} {self.user.last_name}'
+        return self.user.username
+
+class Address(models.Model):
+    REGION_CHOICES = [
+        (1, 'Dhaka'),
+        (2, 'Rangpur'),
+        (3, 'Khulna'),
+    ]
+
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="addresses")
+    name = models.CharField(max_length=255)
+    company = models.CharField(max_length=255, null=True, blank=True)
+    address = models.TextField()
+    city = models.CharField(max_length=255)
+    post_code = models.CharField(max_length=255)
+    region = models.IntegerField(choices=REGION_CHOICES, default=1)
 
 class Category(models.Model):
     title = models.CharField(max_length=255)

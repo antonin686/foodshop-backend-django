@@ -8,6 +8,7 @@ from . import views
 router = SimpleRouter()
 
 router.register('customers', views.CustomerViewSet)
+router.register('addresses', views.AddressViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
