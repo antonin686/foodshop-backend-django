@@ -1,3 +1,4 @@
+from statistics import mode
 from django.db import models 
 from django.conf import settings
 import os
@@ -7,6 +8,24 @@ def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join('', filename)
+
+class Customer(models.Model):
+    MEMBERSHIP_BRONZE = 'B'
+    MEMBERSHIP_SILVER = 'S'
+    MEMBERSHIP_GOLD = 'G'
+
+    MEMBERSHIP_CHOICES = [
+        (MEMBERSHIP_BRONZE, 'Bronze'),
+        (MEMBERSHIP_SILVER, 'Silver'),
+        (MEMBERSHIP_GOLD, 'Gold'),
+    ]
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
+    birth_date = models.DateField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f'{self.user.first_name} {self.user.last_name}'
 
 class Category(models.Model):
     title = models.CharField(max_length=255)

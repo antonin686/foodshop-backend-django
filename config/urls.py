@@ -4,6 +4,7 @@ from django.urls.conf import include
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+
 admin.site.site_header = 'Admin Panel'
 admin.site.index_title = 'Site administration'
 
