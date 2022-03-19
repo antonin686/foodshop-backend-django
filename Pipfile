@@ -10,6 +10,9 @@ gunicorn = "*"
 pillow = "*"
 django-cleanup = "*"
 djangorestframework = "*"
+django-cors-headers = "*"
+djoser = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
