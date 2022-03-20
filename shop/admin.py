@@ -20,3 +20,11 @@ class ProductAdmin(admin.ModelAdmin):
     }
     autocomplete_fields = ['category']
     list_per_page = 10
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_per_page = 10
+
+@admin.register(models.OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_per_page = 10

@@ -1,8 +1,19 @@
+from asyncore import read
 from audioop import add
 from pprint import pprint
 from rest_framework import serializers
-from shop.models import Product, Category, Customer, Address
+from shop.models import Product, Category, Customer, Address, OrderItem, Order
 
+
+class SimpleProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ["id", "title", "price", 'image'] 
+
+class SimpleAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ["id", "address", "city", "post_code"] 
 
 class CustomerSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(read_only=True)
@@ -28,26 +39,6 @@ class AddressSerializer(serializers.ModelSerializer):
             "region",
         ]
 
-        # user_id = self.context["user_id"]
-        # name = self.validated_data["name"]
-        # address = self.validated_data["address"]
-        # company = self.validated_data["company"]
-        # city = self.validated_data["city"]
-        # post_code = self.validated_data["post_code"]
-        # region = self.validated_data["region"]
-        # (customer, created) = Customer.objects.get_or_create(user_id=user_id)
-        # addressobj = Address.objects.create(
-        #     customer=customer,
-        #     name=name,
-        #     address=address,
-        #     company=company,
-        #     city=city,
-        #     post_code=post_code,
-        #     region=region,
-        # )
-
-
-
 class CategorySerializer(serializers.ModelSerializer):
     icon = serializers.ImageField(use_url=True)
     image = serializers.ImageField(use_url=True)
@@ -63,3 +54,23 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ["id", "title", "slug", "price", "image"]
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = SimpleProductSerializer()
+    class Meta:
+        model = OrderItem
+        fields = ["id", "product", "quantity"]
+
+class OrderSerializer(serializers.ModelSerializer):
+    status = serializers.IntegerField()
+    items = OrderItemSerializer(many=True)
+    address = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Order
+        fields = ["id", "customer_id", "address", "status", "items", 'created_at']
+
+    def get_address(self, obj):
+        address = Address.objects.get(pk=obj.address_id)
+        return SimpleAddressSerializer(address).data
+

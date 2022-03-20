@@ -4,12 +4,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from ..models import Address, Customer
-from ..serializers import AddressSerializer
-from pprint import pp, pprint
-import json
-
-from shop import serializers
+from ..models import Address, Customer, Order, OrderItem
+from ..serializers import AddressSerializer, OrderSerializer
+from pprint import pprint
 
 class AddressViewSet(ModelViewSet):
     queryset = Address.objects.all()
@@ -39,14 +36,29 @@ class AddressViewSet(ModelViewSet):
         )
         return Response('ok')
         
-
-
-
     @action(detail=False, permission_classes=[IsAuthenticated])
     def choices(self, request):
         choices = []
         for value, title in Address.REGION_CHOICES:
-            choices.append({"title": title, "value": value})
+            choices.append({"label": title, "value": value})
         
 
         return Response(choices)
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer 
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request):
+        #pprint(request.data['items'])
+        user_id = request.user.id
+        address_id = request.data['address']
+        items = request.data['items']
+        (customer, created) = Customer.objects.get_or_create(user_id=user_id)
+        order = Order.objects.create(customer=customer, address_id=address_id)
+
+        for item in request.data['items']:
+            OrderItem.objects.create(order=order, product_id=item['id'], quantity=item['quantity'])
+        
+        return Response('ok')

@@ -2,8 +2,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from ..models import Customer, Address
-from ..serializers import CustomerSerializer, AddressSerializer
+from ..models import Customer, Address, Order
+from ..serializers import CustomerSerializer, AddressSerializer, OrderSerializer
 
 
 class CustomerViewSet(ModelViewSet):
@@ -27,5 +27,11 @@ class CustomerViewSet(ModelViewSet):
     def addresses(self, request):
         addresses = Address.objects.filter(customer_id = request.user.customer.id)
         serializer = AddressSerializer(addresses, many=True)
+
+        return Response(serializer.data)
+    @action(detail=False, permission_classes=[IsAuthenticated])
+    def orders(self, request):
+        addresses = Order.objects.filter(customer_id = request.user.customer.id)
+        serializer = OrderSerializer(addresses, many=True, context={"request":request})
 
         return Response(serializer.data)

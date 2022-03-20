@@ -9,6 +9,7 @@ router = SimpleRouter()
 
 router.register('customers', views.CustomerViewSet)
 router.register('addresses', views.AddressViewSet)
+router.register('orders', views.OrderViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

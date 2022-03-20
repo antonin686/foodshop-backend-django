@@ -1,6 +1,3 @@
-from email.policy import default
-from pyexpat import model
-from statistics import mode
 from django.db import models 
 from django.conf import settings
 import os
@@ -76,3 +73,28 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+class Order(models.Model):
+    STATUS_CHOICES = [
+        (0, 'Canceled'),
+        (1, 'Waiting For Verification'),
+        (2, 'Processsing'),
+        (3, 'On The Way'),
+        (4, 'Delivered'),
+    ]
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name="orders")
+    address = models.ForeignKey(Address, on_delete=models.PROTECT)
+    status = models.SmallIntegerField(choices=STATUS_CHOICES, default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.customer.user.username
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    quantity = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f'{self.product.title}  ({self.quantity})'
