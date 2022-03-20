@@ -27,13 +27,10 @@ SECRET_KEY = 'django-insecure-cktl=b+7@)k2rr#=_si_%=ecrjpo=abe!hue(ks^y89+*p%ti=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['foodshop-backend-django.herokuapp.com', 'foodshop.antoninislam.com','localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'foodshop.antoninislam.com'
-]
-
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 # Application definition
 
 INSTALLED_APPS = [
