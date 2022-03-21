@@ -19,4 +19,5 @@ urlpatterns = [
     path('products/query/categories/<slug:slug>', views.category_products),
     path('categories/', views.category_index),
     path('categories/<slug:slug>/products/', views.category_products),
+    path('register/', views.register),
 ]
